@@ -3,7 +3,7 @@
 RELEASE=$(curl -s https://api.github.com/repos/PandawanFr/EasyGarlic2/releases/latest)
 RELEASE_ID=$(node -pe 'JSON.parse(process.argv[1]).id' "$RELEASE")
 
-RELEASES=$(find dist/ -maxdepth 1 | grep 'EasyGarlic' | grep -v 'blockmap')
+RELEASES=$(find dist/ -maxdepth 1 | grep -i 'EasyGarlic' | grep -v 'blockmap')
 
 IFS=$'\n'
 for f in $RELEASES; do
