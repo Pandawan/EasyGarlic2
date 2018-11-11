@@ -4,7 +4,10 @@
   "version": "0.0.0-development",
   "private": true,
   "main": "public/electron.js",
-  "author": "Pandawan",
+  "author": {
+    "name": "Pandawan",
+    "email": "pandawanfr@gmail.com"
+  },
   "homepage": "./",
   "dependencies": {
     "aphrodite": "^2.2.3",
