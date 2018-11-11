@@ -30,12 +30,12 @@
     "cra-eject": "react-scripts-ts eject",
     "electron-dev": "concurrently \"cross-env BROWSER=none yarn cra-start\" \"wait-on http://localhost:3000 && electron .\"",
     "preelectron-pack": "yarn cra-build",
-    "electron-pack": "build --c.extraMetadata.main=build/electron.js",
-    "electron-pack-linux": "build --linux --c.extraMetadata.main=build/electron.js",
-    "electron-pack-win": "build --win --c.extraMetadata.main=build/electron.js",
-    "electron-pack-macos": "build --mac --c.extraMetadata.main=build/electron.js",
-    "electron-pack-docker": "build --linux --win --c.extraMetadata.main=build/electron.js",
-    "semantic-release": "semantic-release"
+    "electron-pack": "build -p never --c.extraMetadata.main=build/electron.js",
+    "electron-pack-linux": "build -p never --linux --c.extraMetadata.main=build/electron.js",
+    "electron-pack-win": "build -p never --win --c.extraMetadata.main=build/electron.js",
+    "electron-pack-macos": "build -p never --mac --c.extraMetadata.main=build/electron.js",
+    "electron-pack-docker": "build -p never --linux --win --c.extraMetadata.main=build/electron.js",
+    "inject-semantic-release": "semantic-release -d -p ./scripts/inject-version"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
@@ -74,13 +74,77 @@
       "buildResources": "assets"
     },
     "win": {
-      "requestedExecutionLevel": "highestAvailable"
+      "requestedExecutionLevel": "highestAvailable",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
     "mac": {
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "category": "Utility"
+      "category": "Utility",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "snap",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "armv7l",
+            "arm64"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "pacman",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "apk",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "armv7l",
+            "arm64"
+          ]
+        }
+      ]
     }
   },
   "repository": {
@@ -89,7 +153,12 @@
   },
   "release": {
     "getLastRelease": "last-release-git",
-    "branch": "typescript"
+    "branch": "release",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github"
+    ]
   },
   "husky": {
     "hooks": {

@@ -22,11 +22,13 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
+  - yarn run inject-semantic-release
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash scripts/build-osx.sh ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash scripts/build-linux.sh ; fi
 
 after_success:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then bash scripts/semantic-release.sh ; fi
+  - ls dist/
+  - bash scripts/deploy.sh
 
 branches:
   except:
