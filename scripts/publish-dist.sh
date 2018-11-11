@@ -10,5 +10,5 @@ for f in $RELEASES; do
     BN=$(node -pe 'encodeURIComponent(process.argv[1])' $(basename $f))
     UPLOAD_URL="https://uploads.github.com/repos/PandawanFr/EasyGarlic2/releases/$RELEASE_ID/assets?name=$BN"
     TYPE=$(file --mime-type "$f" | awk '{print $NF}')
-    curl -v --data-binary "@$f" -H "Content-Type: $TYPE" -H "Authorization: token $GH_TOKEN" $UPLOAD_URL
+    curl --data-binary "@$f" -H "Content-Type: $TYPE" -H "Authorization: token $GH_TOKEN" $UPLOAD_URL
 done

@@ -18,7 +18,7 @@ fi
 # Wait on OSX build for Linux build to finish
 # I swear there is literally no better way
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    sleep 1200
+    travis_wait 25 sleep 1200
 fi
 
 # Publish artifacts
