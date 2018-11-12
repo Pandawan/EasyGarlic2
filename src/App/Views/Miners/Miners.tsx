@@ -1,5 +1,6 @@
 import { css, StyleSheet } from 'aphrodite';
 import React from 'react';
+import * as yup from 'yup';
 
 import Colors from 'Services/Colors';
 import Utilities from 'Services/Utilities';
@@ -99,6 +100,7 @@ class Miners extends React.Component<{}, IMinersState> {
               miner={miners[selectedMiner]}
               onSaveSettings={this.handleSaveMinerSettings}
               onDeleteMiner={this.handleDeleteMiner}
+              formValidationSchema={this.minerFormValidationSchema}
             />
           </div>
         </div>
@@ -168,6 +170,34 @@ class Miners extends React.Component<{}, IMinersState> {
     miners[selectedMiner] = Miner.ObjectToMiner(miner);
     UserData.setMiners(miners);
     this.setState({ miners });
+  };
+
+  /**
+   * Called for validation schema.
+   */
+  private minerFormValidationSchema = (miner: Miner) => {
+    const { miners } = this.state;
+
+    return yup.object().shape({
+      name: yup
+        .string()
+        .trim()
+        .required('Name is a required field.')
+        .notOneOf(['+ Add Miner', '+_add_miner'], 'This is a reserved name.')
+        .test({
+          message: 'There is already a miner with this name.',
+          test: (name?: string) =>
+            name !== undefined &&
+            miners.find(m => m.name === name && m.uuid !== miner.uuid) ===
+              undefined,
+        }),
+      options: yup.object().shape({
+        algorithm: yup
+          .string()
+          .trim()
+          .required('Algorithm is a required field.'),
+      }),
+    });
   };
 }
 

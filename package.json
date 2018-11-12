@@ -18,7 +18,8 @@
     "react-select": "^2.1.1",
     "react-sortable-hoc": "^0.8.3",
     "systeminformation": "^3.45.9",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "yup": "^0.26.6"
   },
   "scripts": {
     "start": "yarn electron-dev",
@@ -42,6 +43,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-select": "^2.0.6",
     "@types/uuid": "^3.4.4",
+    "@types/yup": "^0.26.1",
     "concurrently": "^4.0.1",
     "cross-env": "^5.2.0",
     "electron": "^3.0.4",

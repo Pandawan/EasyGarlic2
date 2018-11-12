@@ -1,7 +1,8 @@
 import { css, StyleSheet } from 'aphrodite';
-import { Form, Formik, FormikProps } from 'formik';
+import { ErrorMessage, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
 import { ValueType } from 'react-select/lib/types';
+import yup from 'yup';
 
 import Button from 'App/Components/Button';
 import DropdownField from 'App/Components/Collections/DropdownField';
@@ -10,6 +11,7 @@ import InputField from 'App/Components/InputField';
 import Device from 'App/Models/Device';
 import Miner from 'App/Models/Miner';
 import DeviceManager from 'App/Services/DeviceManager';
+import Colors from 'Services/Colors';
 
 // TODO: Rewrite CSS so that it uses an auto height, but it scrolls when it can't display everything
 const styles = StyleSheet.create({
@@ -48,6 +50,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
   },
+
+  errorMessage: {
+    color: Colors.danger,
+  },
 });
 
 interface IMinerPanelProps {
@@ -55,6 +61,7 @@ interface IMinerPanelProps {
   miner: Miner;
   onSaveSettings: (miner: Miner) => void;
   onDeleteMiner: (id: string) => void;
+  formValidationSchema: (miner: Miner) => yup.ObjectSchema<{}>;
 }
 
 interface IMinerPanelState {
@@ -88,7 +95,7 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
   }
 
   public render() {
-    const { className } = this.props;
+    const { className, formValidationSchema } = this.props;
     const { miner } = this.state;
 
     const formRendering = ({
@@ -97,6 +104,8 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
       handleChange,
       setFieldValue,
       setFieldTouched,
+      errors,
+      touched,
     }: FormikProps<Miner>) => {
       // TODO: Refactor this, it's really ugly code oof
       // Adapt dropdown events to Formik because react-select uses its event system
@@ -122,7 +131,6 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
           value: device.getId(),
         } as IEnumerableItem;
       }
-
       return (
         <Form>
           <InputField
@@ -133,6 +141,9 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
             onBlur={handleBlur}
             onChange={handleChange}
           />
+          <div className={css(styles.errorMessage)}>
+            <ErrorMessage name="name" />
+          </div>
           <DropdownField
             id="device"
             label="Device"
@@ -144,15 +155,18 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
           />
           <h3 className={css(styles.subtitle)}>Mining Options</h3>
           <InputField
-            id="algorithm"
+            id="options.algorithm"
             label="Algorithm"
             type="text"
             value={values.options.algorithm}
             onBlur={handleBlur}
             onChange={handleChange}
           />
+          <div className={css(styles.errorMessage)}>
+            <ErrorMessage name="options.algorithm" />
+          </div>
           <InputField
-            id="intensity"
+            id="options.intensity"
             label="Intensity"
             type="text"
             value={values.options.intensity}
@@ -160,7 +174,7 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
             onChange={handleChange}
           />
           <InputField
-            id="parameters"
+            id="options.parameters"
             label="Custom Parameters"
             type="text"
             value={values.options.parameters}
@@ -205,6 +219,7 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
             initialValues={miner}
             onSubmit={this.handleSave}
             render={formRendering}
+            validationSchema={formValidationSchema(miner)}
           />
         </div>
       </div>
@@ -214,16 +229,16 @@ class MinerPanel extends React.Component<IMinerPanelProps, IMinerPanelState> {
   /**
    * Called when the Save button is clicked.
    * Send the new saved miner data to the Miners component.
-   * @param values The values of the IMinerSettings
+   * @param miner The values of the IMinerSettings
    */
-  private handleSave = (values: Miner) => {
+  private handleSave = (miner: Miner) => {
     const { onSaveSettings } = this.props;
-    onSaveSettings(values);
+    onSaveSettings(miner);
   };
 
   /**
    * Called when the Delete button is clicked.
-   * Send the uuid of the mienr to be deleted to the Mienrs component.
+   * Send the uuid of the miner to be deleted to the Miners component.
    */
   private handleDelete = () => {
     const { miner, onDeleteMiner } = this.props;
