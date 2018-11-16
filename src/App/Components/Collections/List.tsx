@@ -87,10 +87,12 @@ class List extends React.Component<IListProps> {
             value={item.value}
             onClick={this.clickItemHandler}
           >
-            {item.label}
+            {item.rendering !== undefined ? item.rendering : item.label}
           </button>
         ) : (
-          <span className={css(styles.listItemContent)}>{item.label}</span>
+          <span className={css(styles.listItemContent)}>
+            {item.rendering !== undefined ? item.rendering : item.label}
+          </span>
         )}
       </li>
     ));

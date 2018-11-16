@@ -22,10 +22,7 @@ const styles = StyleSheet.create({
   scrollableContainer: {
     paddingLeft: '0.125em',
     paddingRight: '0.125em',
-    width: '100%',
-
-    'overflow-x': 'hidden',
-    'overflow-y': 'auto',
+    width: '75%',
   },
 
   subtitle: {

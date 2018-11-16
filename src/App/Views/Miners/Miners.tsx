@@ -11,6 +11,7 @@ import Miner from 'App/Models/Miner';
 import UserData from 'App/Services/UserData';
 import MinerPanel from './Views/MinerPanel';
 
+// TODO: Cleanup/re-make CSS for this because it's messy
 const styles = StyleSheet.create({
   body: {
     backgroundColor: Colors.backgroundGrey,
@@ -21,9 +22,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     height: 'calc(100vh - 5.25em)',
   },
+
   panel: {
     margin: '0 auto',
-    maxHeight: 'calc(100% - 3em)',
+    marginBottom: '0.25em',
     width: '75%',
 
     backgroundColor: 'white',
@@ -32,13 +34,19 @@ const styles = StyleSheet.create({
   panelContainer: {
     flex: '3',
     height: '100%',
+    width: '100%',
+
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
   },
+
   selector: {
     flex: '1',
     height: '100%',
     'overflow-x': 'hidden',
     'overflow-y': 'auto',
   },
+
   title: {
     margin: 0,
     paddingBottom: '0.25em',
@@ -79,7 +87,7 @@ class Miners extends React.Component<{}, IMinersState> {
     // Add an "+ Add Miner" button in the list
     listOfMiners.push({
       label: '+ Add Miner',
-      // Use a + so that it can't be confused with a miner with the same ID
+      // Use a + so that it can't be confused with a miner with the same ID (since + is not allowed in miner ids)
       value: '+_add_miner',
     });
 

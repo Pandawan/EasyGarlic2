@@ -89,12 +89,12 @@ const SortableItem = SortableElement(
             onClick={onClickItem}
           >
             <DragHandle />
-            {` ${item.label}`}
+            {` ${item.rendering !== undefined ? item.rendering : item.label}`}
           </button>
         ) : (
           <span className={css(styles.listItemContent)}>
             <DragHandle />
-            {` ${item.label}`}
+            {` ${item.rendering !== undefined ? item.rendering : item.label}`}
           </span>
         )}
       </li>
